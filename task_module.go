@@ -35,28 +35,38 @@ func loadTasks(task_list *TaskList) {
 	file, err := os.OpenFile("tasks.json", os.O_RDONLY, 0644)
 
 	if err != nil {
-		panic(err)
+		//if file not found, then create the file
+		_, create_error := os.Create("tasks.json")
+		if create_error != nil {
+			panic(create_error)
+		}
+		fmt.Println("tasks.json file created")
 	} else {
 		defer file.Close()
 		//unmarshall json file
 		decoder := json.NewDecoder(file)
 		err = decoder.Decode(&task_list)
 		if err != nil {
-			panic(err)
+			fmt.Println("tasks.json file not found")
+		} else {
+			fmt.Println("Loaded tasks from tasks.json")
 		}
-		fmt.Println("Loaded tasks from tasks.json")
 	}
 }
 
 func listTasks(task_list TaskList) {
-	for i, task := range task_list.Tasks {
-		var status string
-		if task.Done {
-			status = "✓"
-		} else {
-			status = "✗"
+	if len(task_list.Tasks) == 0 {
+		fmt.Println("No tasks found")
+	} else {
+		for i, task := range task_list.Tasks {
+			var status string
+			if task.Done {
+				status = "done"
+			} else {
+				status = "pending"
+			}
+			fmt.Printf("%d. %s - %s\n", i+1, task.Title, status)
 		}
-		fmt.Printf("%d. %s %s\n", i+1, task.Title, status)
 	}
 }
 
@@ -65,8 +75,13 @@ func addTask(task_list *TaskList, title string) {
 	task_list.Tasks = append(task_list.Tasks, task)
 }
 
-func deleteTask(task_list *TaskList, id int) {
+func deleteTask(task_list *TaskList, id int) bool {
+	//if id not found, return false
+	if id < 1 || id > len(task_list.Tasks) {
+		return false
+	}
 	task_list.Tasks = append(task_list.Tasks[:id-1], task_list.Tasks[id:]...)
+	return true
 }
 
 func saveToFile(task_list TaskList) {
@@ -84,6 +99,10 @@ func saveToFile(task_list TaskList) {
 	}
 }
 
-func markAsDone(task_list *TaskList, id int) {
+func markAsDone(task_list *TaskList, id int) bool {
+	if id < 1 || id > len(task_list.Tasks) {
+		return false
+	}
 	task_list.Tasks[id-1].Done = true
+	return true
 }

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -21,26 +23,39 @@ func main() {
 		case "add":
 			fmt.Println("Enter task name")
 			var title string
-			fmt.Scanln(&title)
+			in := bufio.NewScanner(os.Stdin)
+			in.Scan()
+			title = in.Text()
 			addTask(&task_list, title)
+			fmt.Println("Task added successfully!")
 		case "list":
 			listTasks(task_list)
 		case "done":
 			fmt.Println("Enter task id")
 			var id int
 			fmt.Scanln(&id)
-			markAsDone(&task_list, id)
+			if markAsDone(&task_list, id) {
+				fmt.Println("Task marked as done!")
+			} else {
+				fmt.Println("Invalid task id")
+			}
 		case "delete":
 			fmt.Println("Enter task id")
 			var id int
 			fmt.Scanln(&id)
-			deleteTask(&task_list, id)
+			if deleteTask(&task_list, id) {
+				fmt.Println("Task deleted successfully!")
+			} else {
+				fmt.Println("Invalid task id")
+			}
 		case "savefile":
 			fmt.Println("Saving tasks to tasks.json")
 			saveToFile(task_list)
 		case "exit":
+			fmt.Print("\033[H\033[2J")
 			fmt.Println("Goodbye!")
 			return
 		}
+		fmt.Println()
 	}
 }
