@@ -16,12 +16,12 @@ type TaskList struct {
 	Tasks []Task `json:"tasks"`
 }
 
-func startupMessage() {
+func StartupMessage() {
 	fmt.Println("Welcome back to To Do List CLI!")
 	fmt.Println("Type 'help' for more information")
 }
 
-func helpMessage() {
+func HelpMessage() {
 	fmt.Println("Type 'clear' to clear the console")
 	fmt.Println("Type 'add' to add a new task")
 	fmt.Println("Type 'list' to list all tasks")
@@ -31,7 +31,7 @@ func helpMessage() {
 	fmt.Println("Type 'exit' to exit the program")
 }
 
-func loadTasks(task_list *TaskList) {
+func LoadTasks(task_list *TaskList) {
 	file, err := os.OpenFile("tasks.json", os.O_RDONLY, 0644)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func loadTasks(task_list *TaskList) {
 	}
 }
 
-func listTasks(task_list TaskList) {
+func ListTasks(task_list TaskList) {
 	if len(task_list.Tasks) == 0 {
 		fmt.Println("No tasks found")
 	} else {
@@ -70,12 +70,12 @@ func listTasks(task_list TaskList) {
 	}
 }
 
-func addTask(task_list *TaskList, title string) {
+func AddTask(task_list *TaskList, title string) {
 	task := Task{ID: int64(len(task_list.Tasks) + 1), Title: title, Done: false}
 	task_list.Tasks = append(task_list.Tasks, task)
 }
 
-func deleteTask(task_list *TaskList, id int) bool {
+func DeleteTask(task_list *TaskList, id int) bool {
 	//if id not found, return false
 	if id < 1 || id > len(task_list.Tasks) {
 		return false
@@ -84,7 +84,7 @@ func deleteTask(task_list *TaskList, id int) bool {
 	return true
 }
 
-func saveToFile(task_list TaskList) {
+func SaveToFile(task_list TaskList) {
 	file, err := os.OpenFile("tasks.json", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		panic(err)
@@ -99,7 +99,7 @@ func saveToFile(task_list TaskList) {
 	}
 }
 
-func markAsDone(task_list *TaskList, id int) bool {
+func MarkAsDone(task_list *TaskList, id int) bool {
 	if id < 1 || id > len(task_list.Tasks) {
 		return false
 	}
