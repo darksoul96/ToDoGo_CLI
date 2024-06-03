@@ -26,9 +26,11 @@ func main() {
 		case "list":
 			listTasks(task_list)
 		case "done":
-			fmt.Println("Done tasks")
+			fmt.Println("Enter task id")
+			var id int
+			fmt.Scanln(&id)
+			markAsDone(&task_list, id)
 		case "delete":
-			//enter task id user input
 			fmt.Println("Enter task id")
 			var id int
 			fmt.Scanln(&id)
@@ -36,7 +38,6 @@ func main() {
 		case "savefile":
 			fmt.Println("Saving tasks to tasks.json")
 			saveToFile(task_list)
-
 		case "exit":
 			fmt.Println("Goodbye!")
 			return

@@ -50,7 +50,13 @@ func loadTasks(task_list *TaskList) {
 
 func listTasks(task_list TaskList) {
 	for i, task := range task_list.Tasks {
-		fmt.Printf("%d. %s\n", i+1, task.Title)
+		var status string
+		if task.Done {
+			status = "✓"
+		} else {
+			status = "✗"
+		}
+		fmt.Printf("%d. %s %s\n", i+1, task.Title, status)
 	}
 }
 
@@ -76,4 +82,8 @@ func saveToFile(task_list TaskList) {
 		}
 		fmt.Println("Saved tasks to tasks.json")
 	}
+}
+
+func markAsDone(task_list *TaskList, id int) {
+	task_list.Tasks[id-1].Done = true
 }
